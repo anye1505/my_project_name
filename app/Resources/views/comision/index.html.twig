@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Comisions list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for comision in comisions %}
+            <tr>
+                <td><a href="{{ path('comision_show', { 'id': comision.id }) }}">{{ comision.id }}</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('comision_show', { 'id': comision.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('comision_edit', { 'id': comision.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('comision_new') }}">Create a new comision</a>
+        </li>
+    </ul>
+{% endblock %}

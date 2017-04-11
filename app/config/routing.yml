@@ -1,0 +1,16 @@
+app_comision:
+    resource: "@AppBundle/Controller/ComisionController.php"
+    type:     annotation
+
+my_tramite:
+    resource: "@MyBundle/Controller/TramiteController.php"
+    type:     annotation
+
+my:
+    resource: "@MyBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
