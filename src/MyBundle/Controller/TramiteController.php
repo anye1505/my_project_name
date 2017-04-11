@@ -48,6 +48,9 @@ class TramiteController extends Controller
     public function newAction(Request $request)
     {
         $tramite = new Tramite();
+        $tramite->addRecaudo(new Document());
+        $tramite->addRecaudo(new Document());
+
         $form = $this->createForm('MyBundle\Form\TramiteType', $tramite);
         $form->handleRequest($request);
 
@@ -56,7 +59,7 @@ class TramiteController extends Controller
         foreach ($tramite->getRecaudos() as $key => $recaudo) {
             $errors = $this->get('validator')->validateValue(
                 $tramite->getRecaudos()->get($key)->getFile(),
-                $notBlankConstraint );   
+                $notBlankConstraint );
                 foreach ($errors as $error) {
                     $form->get('recaudos')->addError( new FormError("Para el Capítulo ".($key + 1)." , debe cargar un archivo PDF."));
                 }
@@ -66,7 +69,7 @@ class TramiteController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($tramite);
 
-            foreach ($tramite->getRecaudos() as $actualRecaudo) {  
+            foreach ($tramite->getRecaudos() as $actualRecaudo) {
                 $actualRecaudo->setTramite($tramite);
             }
 

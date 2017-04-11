@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 use MyBundle\Form\DocumentType;
 use MyBundle\Entity\Tramite;
 
@@ -21,7 +22,7 @@ class TramiteType extends AbstractType
             ->add('recaudos', CollectionType::class, array(
                 'label' => false,
                 'entry_type' => DocumentType::class,
-                
+
                 )
             )
         ;

@@ -3,11 +3,11 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use MyBundle\Entity\Tramite;
-use MyBundle\Entity\Document;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use MyBundle\Entity\Tramite as BaseTramite;
+
+use MyBundle\Entity\Tramite;
+use MyBundle\Entity\Document;
 
 /**
  * Comision
@@ -15,8 +15,10 @@ use MyBundle\Entity\Tramite as BaseTramite;
  * @ORM\Table(name="comision")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ComisionRepository")
  */
-class Comision extends BaseTramite
+class Comision extends Tramite
 {
+    protected $type="comision";
+
     /**
      * @var int
      *
@@ -27,10 +29,24 @@ class Comision extends BaseTramite
     protected $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="MyBundle\Entity\Tramite", mappedBy="comision", cascade={"persist", "remove"}, orphanRemoval=true) 
-     * @ORM\JoinColumn(name="tramite_id", referencedColumnName="id")
+     * @var array
+     * @Assert\Count(
+     *      min = "1",
+     *      max = "10",
+     *      minMessage = "Debe tener al menos 1 Archivo, en caso de ser el tomo completo",
+     *      maxMessage = "Sólo puede tener como maximo {{ limit }} Archivos"
+     * )
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="tramite", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Assert\Valid
      */
-    protected $tramite;
+    protected $recaudos;
+
+    public function __construct()
+    {
+        $documents = array(new Document(), new Document(), new Document(), new Document());
+
+        $this->recaudos = new ArrayCollection($documents);
+    }
 
     /**
      * Get id
@@ -42,29 +58,7 @@ class Comision extends BaseTramite
         return $this->id;
     }
 
-    /**
-     * Set tramite
-     *
-     * @param \MyBundle\Entity\Tramite $tramite
-     * @return Comision
-     */
-    public function setTramite(\MyBundle\Entity\Tramite $tramite = null)
-    {
-        $this->tramite = $tramite;
-        return $this;
-    }
-    /**
-     * Get tramite
-     *
-     * @return \MyBundle\Entity\Tramite
-     */
-    public function getTramite()
-    {
-        return $this->tramite;
-    }
-
     public function __toString() {
         return sprintf($this->getId());
     }
 }
-

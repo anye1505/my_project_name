@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use MyBundle\Form\TramiteType as ComisionType;
+use MyBundle\Entity\Document;
 
 /**
  * Comision controller.
@@ -42,6 +43,7 @@ class ComisionController extends Controller
     public function newAction(Request $request)
     {
         $comision = new Comision();
+
         $form = $this->createForm('AppBundle\Form\ComisionType', $comision);
         $form->handleRequest($request);
 

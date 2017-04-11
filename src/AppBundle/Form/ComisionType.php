@@ -5,30 +5,35 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use MyBundle\Form\TramiteType;
-use MyBundle\Entity\Tramite;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
+use MyBundle\Form\DocumentType;
+use AppBundle\Entity\Comision;
 
 class ComisionType extends AbstractType
 {
-    public function getParent()
-    {
-        return 'my_tramite_tramite';
-    }
     /**
-     * {@inheritdoc}
+     * @param FormBuilderInterface $builder
+     * @param array $options
      */
-    /*public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tramite');
-    }*/
-    
+        $builder
+            ->add('recaudos', CollectionType::class, array(
+                'label' => false,
+                'entry_type' => DocumentType::class,
+                )
+            )
+        ;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Comision'
+            'data_class' => Comision::class
         ));
     }
 

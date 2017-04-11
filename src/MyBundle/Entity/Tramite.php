@@ -7,15 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use MyBundle\Entity\Document;
-use AppBundle\Entity\Comision;
 
 /**
- * Tramite
- * @ORM\Table(name="tramite")
- * @ORM\Entity(repositoryClass="MyBundle\Repository\TramiteRepository")
+ * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"tramite" = "Tramite", "comision" = "AppBundle\Entity\Comision"})
  */
 class Tramite
 {
+    protected $type = "tramite";
+
     /**
      * @var int
      *
@@ -24,30 +26,15 @@ class Tramite
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
-     * @var array
-     * @Assert\Count(
-     *      min = "1",
-     *      max = "10",
-     *      minMessage = "Debe tener al menos 1 Archivo, en caso de ser el tomo completo",
-     *      maxMessage = "Sólo puede tener como maximo {{ limit }} Archivos"
-     * )
-     * @ORM\OneToMany(targetEntity="Document", mappedBy="tramite", cascade={"persist", "remove"}, orphanRemoval=true) 
-     * @Assert\Valid
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="tramite", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $recaudos;
 
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Comision", mappedBy="tramite")
-     */
-    //protected $comision;
-
     public function __construct()
     {
-        $this->recaudos = new ArrayCollection(array(new Document("Recaudo_1")
-            ,new Document("Recaudo_2"),new Document("Recaudo_3"),
-            new Document("Recaudo_4"),new Document("Recaudoo_5")
-            ));
+        $this->recaudos = new ArrayCollection();
     }
 
     /**
@@ -59,16 +46,22 @@ class Tramite
     {
         return $this->id;
     }
-    
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
     /**
      * Get recaudos
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRecaudos()
     {
         return $this->recaudos;
     }
+
     /**
      * Add recaudo
      *
@@ -79,9 +72,10 @@ class Tramite
     {
         $this->recaudos[] = $recaudo;
         $recaudo->setTramite($this);
-        
+
         return $this;
     }
+
     /**
      * Remove recaudo
      *
@@ -92,6 +86,7 @@ class Tramite
         $this->recaudos->removeElement($recaudo);
         $recaudo->setTramite(null);
     }
+
     /**
      * Remove recaudos
      *
@@ -99,16 +94,6 @@ class Tramite
     public function removeAllRecaudos()
     {
         $this->recaudos->clear();
-    }
-
-    /**
-     * Get comision
-     *
-     * @return \AppBundle\Entity\Comision
-     */
-    public function getComision()
-    {
-        return $this->comision;
     }
 
     public function __toString() {

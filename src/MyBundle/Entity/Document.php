@@ -14,23 +14,25 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\HasLifecycleCallbacks()
  */
 class Document
-{ 
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $path;
+
     /**
      * @ORM\Column(type="string", length=50)
      * Assert\NotBlank(message="Por favor, ingrese el nombre del Documento.")
      */
     private $name;
+
     /**
      * @var UploadedFile
      *
@@ -42,6 +44,7 @@ class Document
      * @Assert\NotNull(message="Por favor, cargar el Capítulo como un archivo PDF.")
      */
     private $file;
+
     private $temp;
 
     /**
@@ -51,9 +54,11 @@ class Document
      */
     protected $tramite;
 
-    function __construct($name = null){
+    function __construct($name = null, string $path = null){
         $this->name = $name;
+        $this->path = $path;
     }
+
     /**
      * Sets file.
      *
@@ -80,40 +85,45 @@ class Document
     {
         return $this->file;
     }
-    
+
     public function getAbsolutePath()
     {
         return null === $this->path
             ? null
             : $this->getUploadRootDir().'/'.$this->path;
     }
+
     public function getWebPath()
     {
         return null === $this->path
             ? null
             : $this->getUploadDir().'/'.$this->path;
     }
+
     protected function getUploadRootDir()
     {
         // la ruta absoluta del directorio donde se deben
         // guardar los archivos cargados
         return __DIR__.'/../../../web/'.$this->getUploadDir();
     }
+
     protected function getUploadDir()
     {
         // se deshace del __DIR__ para no meter la pata
         // al mostrar el documento/pdf cargada en la vista.
         return 'uploads/oficios';
     }
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
+
     /**
      * Set name
      *
@@ -125,15 +135,17 @@ class Document
         $this->name = $name;
         return $this;
     }
+
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
+
     /**
      * Set path
      *
@@ -145,15 +157,17 @@ class Document
         $this->path = $path;
         return $this;
     }
+
     /**
      * Get path
      *
-     * @return string 
+     * @return string
      */
     public function getPath()
     {
         return $this->path;
     }
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
@@ -164,6 +178,7 @@ class Document
             $this->path = $this->getFile()->guessExtension();
         }
     }
+
     /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
@@ -176,7 +191,7 @@ class Document
         }
         // check if we have an old pdf
         if (isset($this->temp)) {
-            
+
             if(file_exists($this->getUploadRootDir().'/'.$this->id.".".$this->temp)){
                 // delete the old pdf
                 unlink($this->getUploadRootDir().'/'.$this->id.".".$this->temp);
@@ -200,11 +215,12 @@ class Document
         printf("<pre>");
         print_r($this->getId());
         printf("</pre>");*/
-        
-        
+
+
         // limpia la propiedad «file» ya que no la necesitas más
         $this->file = null;
     }
+
     /**
      * @ORM\PostRemove()
      */
@@ -226,6 +242,7 @@ class Document
         $this->tramite = $tramite;
         return $this;
     }
+
     /**
      * Get tramite
      *
