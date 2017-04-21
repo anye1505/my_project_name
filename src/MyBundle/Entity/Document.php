@@ -209,13 +209,6 @@ class Document
         /* Actualizamos al nuevo Path
          * para que se guarde en la base de datos el nombre asignado al archivo*/
         $this->setPath($this->id.'.'.$this->path);
-        /*printf("<pre>");
-        print_r($this->getPath());
-        printf("</pre>");
-        printf("<pre>");
-        print_r($this->getId());
-        printf("</pre>");*/
-
 
         // limpia la propiedad «file» ya que no la necesitas más
         $this->file = null;
